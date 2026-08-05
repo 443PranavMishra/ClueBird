@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClueBird</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <!-- <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M3 12c3-6 15-6 18 0-3 6-15 6-18 0z"/>
+          <circle cx="12" cy="12" r="2.4"/>
+        </svg> -->
+      </span>
+      <span class="brand-text">Clue Bird</span>
+    </div>
+    <div class="topbar-right">
+      <span class="species-count">{{ total_classes }} SPECIES CATALOGUED</span>
+      <button id="browseBtn" class="ghost-btn" type="button">Browse Field Guide</button>
+    </div>
+  </div>
+</header>
+
+{% if not model_ready %}
+<div class="banner-warning">
+  ⚠️ Model checkpoint not found — identification is disabled. {{ model_error }}
+</div>
+{% endif %}
+
+<main class="layout">
+
+  <!-- ============ LEFT: BINOCULAR SCANNER ============ -->
+  <section class="scanner" aria-label="Scanner">
+    <div class="binoculars">
+      <div class="strap"></div>
+      <div class="lens-pair">
+        <div class="lens" id="lensLeft">
+          <div class="lens-glass" id="lensGlassLeft">
+            <div class="lens-idle">
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 7h2l1.4-2h9.2L18 7h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>
+                <circle cx="12" cy="13" r="3.6"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="lens" id="lensRight">
+          <div class="lens-glass" id="lensGlassRight">
+            <img id="previewImg" class="preview-img hidden" alt="Uploaded bird">
+          </div>
+        </div>
+      </div>
+      <div class="bridge"></div>
+    </div>
+
+    <div class="scanner-controls">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
+      <button id="pickBtn" class="upload-btn" type="button">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 16V4M12 4l-4 4M12 4l4 4"/>
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+        </svg>
+        Upload a photo
+      </button>
+      <p id="statusLine" class="status-line">Ready to identify — drag a photo onto the lens, or tap upload.</p>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: FIELD JOURNAL ENTRY ============ -->
+  <section class="journal" id="journal" aria-label="Field journal entry">
+
+    <div class="journal-empty" id="journalEmpty">
+      <p class="journal-empty-title">No specimen logged yet.</p>
+      <p class="journal-empty-sub">Upload a bird photo and this page will fill in with its common name, habitat, diet, physical traits, lifespan, and an interesting fact.</p>
+    </div>
+
+    <div class="journal-content hidden" id="journalContent">
+      <div class="low-confidence-banner hidden" id="lowConfidenceBanner">
+        ⚠️ Not a confident match — this might not be one of the 200 catalogued species, or the photo is unclear. Best guess shown below.
+      </div>
+
+      <div class="journal-header">
+        <div class="journal-header-text">
+          <h1 class="bird-name" id="birdName">—</h1>
+          <p class="bird-sci-name" id="birdSciName">—</p>
+          <span class="confidence-tag" id="confidenceTag"></span>
+        </div>
+        <div class="id-stamp" id="idStamp">
+          <span class="stamp-label">IDENTIFIED</span>
+          <span class="stamp-confidence" id="stampConfidence">—</span>
+        </div>
+      </div>
+
+      <p class="fact-line" id="factLine"></p>
+
+      <div class="journal-grid">
+        <div class="journal-card">
+          <h2><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg> Habitat</h2>
+          <p id="habitatText"></p>
+        </div>
+        <div class="journal-card">
+          <h2><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v7a3 3 0 0 0 6 0V3M9 10v11M18 3c-2 1-2 4-2 6s2 3 2 3v9"/></svg> Diet</h2>
+          <p id="dietText"></p>
+        </div>
+        <div class="journal-card">
+          <h2><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="6" rx="1"/><path d="M7 9v6M11 9v6M15 9v6"/></svg> Physical Characteristics</h2>
+          <p id="physicalText"></p>
+        </div>
+        <div class="journal-card">
+          <h2><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Lifespan</h2>
+          <p id="lifespanText"></p>
+        </div>
+      </div>
+
+      <div class="alt-guesses" id="altGuesses">
+        <h2>Other Possibilities</h2>
+        <div class="alt-list" id="altList"></div>
+      </div>
+    </div>
+
+    <div class="journal-error hidden" id="journalError"></div>
+  </section>
+</main>
+
+<!-- ============ BROWSE-ALL MODAL ============ -->
+<div class="modal-backdrop hidden" id="browseModal">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h2>Full Field Guide — 200 Species</h2>
+      <button id="closeBrowse" class="ghost-btn" type="button">Close ✕</button>
+    </div>
+    <input type="text" id="browseSearch" class="search-input" placeholder="Search by common or scientific name…">
+    <div class="modal-grid" id="modalGrid"></div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
