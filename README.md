@@ -6,6 +6,8 @@
 
 Upload a photo → get the species name, confidence score, habitat, diet, physical characteristics, lifespan, and a fact — all in one scan.
 
+Model : https://www.kaggle.com/models/pranavmishra443/clue-bird (Must Download and put in Model folder For Running Web Application)
+
 </div>
 
 ---
