@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐦 Field Guide Scanner
+# 🐦 Clue Bird
 
 **A deep-learning image classifier for 200 North American bird species, wrapped in a naturalist's field-journal web app.**
 
