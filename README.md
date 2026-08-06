@@ -90,7 +90,7 @@ It has two parts:
 - **Classes**: 200 species, mostly North American songbirds plus seabirds, waterfowl, and raptors — folder names verified directly against the extracted dataset (e.g. `Acadian_Flycatcher`, `Cardinal`, `Yellow_Warbler`, …).
 - **Size**: ~1GB of images across the 200 species folders.
 
-> ⚠️ **Note on folder layout**: this dataset's structure varies by mirror/export — sometimes flat (`ClassA/`, `ClassB/`, …), sometimes pre-split (`train/valid/test/ClassA/`), sometimes wrapped in an extra `images/` folder. `training/train.py` **auto-detects** whichever shape it finds and pools everything into its own clean **stratified 70/15/15 split**, the same fix that was needed for a similar issue on a companion Pokémon-classifier project's dataset — pre-baked Kaggle splits frequently don't contain the same classes across train/valid/test.
+> ⚠️ **Note on folder layout**: this dataset's structure varies by mirror/export — sometimes flat (`ClassA/`, `ClassB/`, …), sometimes pre-split (`train/valid/test/ClassA/`), sometimes wrapped in an extra `images/` folder. `training/train.py` **auto-detects** whichever shape it finds and pools everything into its own clean **stratified 70/15/15 split**, since pre-baked Kaggle splits frequently don't contain the same classes across train/valid/test.
 
 ---
 
@@ -128,10 +128,10 @@ It auto-detects the folder layout, builds its own stratified split, trains both 
 | Macro avg F1 | 0.842 |
 | Weighted avg F1 | 0.841 |
 
-Context worth noting: fine-grained bird species classification from real-world photos is a meaningfully. Reasons the gap makes sense:
+Context worth noting: fine-grained bird species classification from real-world photos is a genuinely hard problem. Reasons an 84.4% ceiling (rather than, say, 97%+) makes sense here:
 
-- **200 classes vs. 150**, more room for confusion
-- **Real photos vs. clean game art** — birds vary hugely in pose, lighting, background clutter, and distance, while the Pokémon set was consistent-style renders
+- **200 fine-grained classes** — a lot of room for visual confusion between similar species
+- **Real-world photos** — birds vary hugely in pose, lighting, background clutter, and distance
 - **Much higher inter-species similarity** — many species within the same genus (sparrows, warblers) differ only in subtle plumage details
 - 80-90% test accuracy with a plainly fine-tuned CNN (no attention modules or part-based localization) is in line with published baselines on CUB-200-style benchmarks
 
