@@ -25,10 +25,6 @@ Upload a photo → get the species name, confidence score, habitat, diet, physic
 - [Known Limitations](#-known-limitations)
 - [Roadmap / Ideas](#-roadmap--ideas)
 - [Tech Stack](#-tech-stack)
-- [Acknowledgments & Disclaimer](#-acknowledgments--disclaimer)
-- [Demo Video](#-demo-video)
-- [License](#-license)
-
 ---
 
 ## 🔍 Overview
