@@ -128,7 +128,7 @@ It auto-detects the folder layout, builds its own stratified split, trains both 
 | Macro avg F1 | 0.842 |
 | Weighted avg F1 | 0.841 |
 
-Context worth noting: fine-grained bird species classification from real-world photos is a meaningfully harder problem than the companion 150-Pokémon classifier (97.3% accuracy) built alongside this project. Reasons the gap makes sense:
+Context worth noting: fine-grained bird species classification from real-world photos is a meaningfully. Reasons the gap makes sense:
 
 - **200 classes vs. 150**, more room for confusion
 - **Real photos vs. clean game art** — birds vary hugely in pose, lighting, background clutter, and distance, while the Pokémon set was consistent-style renders
